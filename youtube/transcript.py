@@ -506,37 +506,34 @@ def get_transcript(video_id: str, languages: list = None) -> Optional[str]:
     """
     Fetch the transcript for *video_id* in ANY available language.
 
-    Strategy order is optimised for Streamlit Cloud / server environments
-    where yt-dlp triggers YouTube's bot-check immediately (no browser session).
-    ytta v1 is tried first — it works instantly via the captions API.
-    yt-dlp is kept as a late fallback for cases where the API is blocked.
+    `languages` is kept for backwards compatibility but not used —
+    every strategy discovers all available captions and picks the best.
 
     Returns plain-text transcript (≤ TRANSCRIPT_CHAR_LIMIT chars) or None.
     """
     logger.info("Fetching transcript for video: %s", video_id)
 
-    # Strategy 1: ytta v1.x — fastest on cloud, no bot-check, any language
-    result = _via_ytta_v1(video_id)
-    if result:
-        return result
-
-    # Strategy 2: ytta v0.x — legacy installs of youtube-transcript-api
-    result = _via_ytta_v0(video_id)
-    if result:
-        return result
-
-    # Strategy 3: Direct timedtext XML — pure urllib, zero dependencies
-    result = _via_timedtext(video_id)
-    if result:
-        return result
-
-    # Strategy 4: yt-dlp — works locally but triggers bot-check on cloud;
-    #              kept here as it succeeds in some server environments
+    # Strategy 1: yt-dlp — best quality, 429-retry logic, any language
     result = _via_ytdlp(video_id)
     if result:
         return result
 
-    # Strategy 5: innertube description — last resort, no real transcript
+    # Strategy 2: ytta v1.x — instance API (youtube-transcript-api >= 1.0)
+    result = _via_ytta_v1(video_id)
+    if result:
+        return result
+
+    # Strategy 3: ytta v0.x — class-method API (legacy installs)
+    result = _via_ytta_v0(video_id)
+    if result:
+        return result
+
+    # Strategy 4: Direct timedtext XML — pure urllib, no library, no 429 risk
+    result = _via_timedtext(video_id)
+    if result:
+        return result
+
+    # Strategy 5: innertube description — pure urllib, replaces broken ytsearch
     result = _via_innertube_description(video_id)
     if result:
         logger.warning("Only description available for %s — no captions found", video_id)
