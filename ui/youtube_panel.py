@@ -171,19 +171,47 @@ def render_youtube_panel(api_key: str, model_id: str) -> None:
             with st.chat_message(msg["role"]):
                 st.markdown(msg["content"])
 
-        # ── Inline input row ──────────────────────────────────────────────────
+        # ── Input: Enter key via on_change, button as alternative ─────────────
+        # Use a "submitted" flag in session state to detect Enter key press.
+        # On submit: save question to _KEY_PENDING, clear input, then process.
+        if "yt_qa_submitted" not in st.session_state:
+            st.session_state["yt_qa_submitted"] = False
+
+        def _on_enter():
+            """Called by Streamlit when user presses Enter in the text_input."""
+            val = st.session_state.get("yt_qa_input", "").strip()
+            if val:
+                st.session_state["yt_qa_pending"]   = val
+                st.session_state["yt_qa_submitted"]  = True
+                st.session_state["yt_qa_input"]      = ""   # clear the box
+
         q_col, btn_col = st.columns([5, 1], gap="small")
         with q_col:
-            qa_prompt = st.text_input(
+            st.text_input(
                 label            = "video_question",
                 placeholder      = "Ask a question about this video…",
                 label_visibility = "collapsed",
                 key              = "yt_qa_input",
+                on_change        = _on_enter,   # fires on Enter
             )
         with btn_col:
             ask_clicked = st.button("Ask ↵", key="yt_ask_btn", use_container_width=True)
 
-        if ask_clicked and qa_prompt and qa_prompt.strip():
+        # Button click: same flow — save to pending and clear input
+        if ask_clicked:
+            val = st.session_state.get("yt_qa_input", "").strip()
+            if val:
+                st.session_state["yt_qa_pending"]  = val
+                st.session_state["yt_qa_submitted"] = True
+                st.session_state["yt_qa_input"]     = ""
+
+        # ── Process pending question (set by Enter OR button) ─────────────────
+        if st.session_state.get("yt_qa_submitted") and st.session_state.get("yt_qa_pending"):
+            qa_prompt = st.session_state["yt_qa_pending"]
+            # Reset flags immediately so a rerun doesn't re-process
+            st.session_state["yt_qa_submitted"] = False
+            st.session_state["yt_qa_pending"]   = ""
+
             with st.chat_message("user"):
                 st.markdown(qa_prompt)
             qa_history.append({"role": "user", "content": qa_prompt})
