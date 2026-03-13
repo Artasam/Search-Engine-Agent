@@ -1,0 +1,26 @@
+# Core
+streamlit
+langchain
+langchain-groq
+langchain-community
+langchain-core
+python-dotenv
+
+# Search tools
+arxiv
+wikipedia
+ddgs
+
+# UI / export
+pandas
+plotly
+
+# YouTube — transcript extraction (4-strategy fallback chain)
+# Strategy 1 & 2: handles both v0.x and v1.x APIs automatically
+youtube-transcript-api
+
+# Strategy 3: most robust — works on age-restricted, auto-generated subs
+yt-dlp
+
+# Strategy 4 & YouTube search fallback
+youtube-search-python
