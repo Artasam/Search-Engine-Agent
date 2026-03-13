@@ -144,13 +144,20 @@ def render_youtube_panel(api_key: str, model_id: str) -> None:
             clear_video()
             st.rerun()
 
-    # ── AI Summary ────────────────────────────────────────────────────────────
+    # ── AI Summary  ── prominent card, always above Q&A ──────────────────────
     summary = st.session_state.get(_KEY_SUMMARY)
     if summary:
-        with st.expander("🤖 AI-Generated Summary", expanded=True):
-            st.markdown(summary)
+        st.markdown(
+            '<div class="yt-summary-card">'
+            '<div class="yt-summary-title">🤖 AI-Generated Summary</div>'
+            '<div class="yt-summary-body">'
+            + summary.replace("\n", "<br>") +
+            '</div></div>',
+            unsafe_allow_html=True,
+        )
+        st.markdown("<div style='margin-top:1.5rem;'></div>", unsafe_allow_html=True)
 
-    # ── Video Q&A Chat ────────────────────────────────────────────────────────
+    # ── Video Q&A Chat ── below summary ───────────────────────────────────────
     transcript = st.session_state.get(_KEY_TRANSCRIPT)
     if transcript:
         st.markdown(
@@ -164,19 +171,23 @@ def render_youtube_panel(api_key: str, model_id: str) -> None:
             with st.chat_message(msg["role"]):
                 st.markdown(msg["content"])
 
-        # Q&A input
-        qa_prompt = st.chat_input(
-            "Ask a question about this video…",
-            key="yt_qa_input",
-        )
+        # ── Inline input row ──────────────────────────────────────────────────
+        q_col, btn_col = st.columns([5, 1], gap="small")
+        with q_col:
+            qa_prompt = st.text_input(
+                label            = "video_question",
+                placeholder      = "Ask a question about this video…",
+                label_visibility = "collapsed",
+                key              = "yt_qa_input",
+            )
+        with btn_col:
+            ask_clicked = st.button("Ask ↵", key="yt_ask_btn", use_container_width=True)
 
-        if qa_prompt:
-            # Show user question immediately
+        if ask_clicked and qa_prompt and qa_prompt.strip():
             with st.chat_message("user"):
                 st.markdown(qa_prompt)
             qa_history.append({"role": "user", "content": qa_prompt})
 
-            # Generate answer
             with st.chat_message("assistant"):
                 with st.spinner("Analysing video content…"):
                     answer = answer_video_question(
@@ -191,8 +202,8 @@ def render_youtube_panel(api_key: str, model_id: str) -> None:
 
             qa_history.append({"role": "assistant", "content": answer})
             st.session_state[_KEY_QA_HISTORY] = qa_history
+            st.rerun()
 
-            # Clear Q&A history button
         if qa_history:
             if st.button("🗑 Clear Q&A History", key="yt_clear_qa"):
                 st.session_state[_KEY_QA_HISTORY] = []

@@ -416,6 +416,54 @@ pre {
   padding-top: 1rem;
   margin: 1.2rem 0 0.8rem;
 }
+
+/* Prominent AI Summary card */
+.yt-summary-card {
+  background: linear-gradient(135deg, #091a2a 0%, #0a1520 100%);
+  border: 1px solid var(--cyan-mid);
+  border-left: 4px solid var(--cyan);
+  border-radius: var(--radius);
+  padding: 1.25rem 1.5rem;
+  margin-top: 1.25rem;
+  box-shadow: 0 0 24px var(--cyan-dim), 0 4px 16px #00000055;
+}
+.yt-summary-title {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--cyan);
+  margin-bottom: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.yt-summary-title::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, var(--cyan-mid), transparent);
+  margin-left: 8px;
+}
+.yt-summary-body {
+  font-family: var(--font);
+  font-size: 14px;
+  line-height: 1.75;
+  color: var(--text);
+}
+.yt-summary-body strong { color: var(--cyan); }
+.yt-summary-body ul    { padding-left: 1.25rem; margin: 0.5rem 0; }
+.yt-summary-body li    { margin-bottom: 0.35rem; }
+.yt-summary-body h2 {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--cyan);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  margin: 1rem 0 0.4rem;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 4px;
+}
 </style>
 """
 
