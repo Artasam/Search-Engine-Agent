@@ -146,10 +146,24 @@ Get a **free** Groq API key at [console.groq.com](https://console.groq.com).
 
 1. Push your repo to GitHub
 2. Go to [share.streamlit.io](https://share.streamlit.io) → New app
-3. Add your key under **App settings → Secrets**:
-   ```toml
-   GROQ_API_KEY = "gsk_..."
-   ```
+3. Add your keys under **App settings → Secrets**:
+
+```toml
+# Required
+GROQ_API_KEY = "gsk_..."
+
+# Required for transcripts on cloud (YouTube blocks cloud IPs directly)
+# Option A — Full transcripts via residential proxy (recommended)
+# Free signup, no credit card: https://proxy.webshare.io
+WEBSHARE_PROXY_USERNAME = "your-username"
+WEBSHARE_PROXY_PASSWORD = "your-password"
+
+# Option B — Video description as context fallback (always works on cloud)
+# Free key: https://console.cloud.google.com → YouTube Data API v3
+YOUTUBE_API_KEY = "AIza..."
+```
+
+> **Why are secrets needed on cloud?** Streamlit Cloud runs on AWS/GCP infrastructure. YouTube permanently blocks ALL direct transcript requests from cloud-provider IPs. Both `yt-dlp` and `youtube-transcript-api` fail with *"Sign in to confirm you're not a bot"* on cloud deployments. The Webshare proxy routes requests through residential IPs that YouTube doesn't block. `YOUTUBE_API_KEY` is used as a fallback to fetch video description + metadata when no transcript is available.
 
 ---
 
