@@ -170,7 +170,12 @@ if prompt:
     # ── YouTube: auto-fetch relevant video ───────────────────────────────────
     if settings.get("youtube_enabled", True):
         with st.spinner("🎬 Finding relevant YouTube video…"):
-            video = search_youtube(prompt)
+            video = search_youtube(
+                query        = prompt,
+                agent_answer = response,          # agent's answer = topic context
+                api_key      = api_key,            # enables LLM query refinement
+                model_id     = settings["model_id"],
+            )
         if video:
             set_video(video)
             st.rerun()
