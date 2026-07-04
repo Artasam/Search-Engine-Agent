@@ -41,7 +41,7 @@ Your Question
 | Feature | Details |
 |---|---|
 | **Multi-source search** | DuckDuckGo (live web), Wikipedia, Arxiv — all togglable per session |
-| **4 Groq LLMs** | Llama 3.1 8B · Llama 3.3 70B · Llama 4 Scout 17B · Qwen3 32B |
+| **4 Groq LLMs** | GPT-OSS 20B · GPT-OSS 120B · Qwen3.6 27B · GPT-OSS Safeguard 20B |
 | **ReAct agent loop** | LangGraph `create_react_agent` with up to 6 reasoning iterations |
 | **Temperature control** | Fine-tune creativity vs. determinism via sidebar slider |
 | **Session analytics** | Query count, avg latency, tool usage frequency in real time |
