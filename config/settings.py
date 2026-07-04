@@ -52,41 +52,37 @@ class ModelInfo:
 
 
 GROQ_MODELS: List[ModelInfo] = [
-    # llama-3.1-8b-instant  — TPM 6 000  (tightest limit)
     ModelInfo(
-        id                = "llama-3.1-8b-instant",
-        label             = "Llama 3.1 · 8B  (fastest)",
+        id                = "openai/gpt-oss-20b",
+        label             = "GPT-OSS 20B",
         context_k         = 128,
         tpm_limit         = 6_000,
         safe_input_tokens = 3_300,    # 6000 * 0.55
-        best_for          = ["Speed", "Chat"],
+        best_for          = ["Speed", "Chat", "High-throughput"],
     ),
-    # llama-3.3-70b-versatile — TPM 6 000
     ModelInfo(
-        id                = "llama-3.3-70b-versatile",
-        label             = "Llama 3.3 · 70B (best)",
+        id                = "openai/gpt-oss-120b",
+        label             = "GPT-OSS 120B (best overall)",
         context_k         = 128,
         tpm_limit         = 6_000,
         safe_input_tokens = 3_300,
-        best_for          = ["Reasoning", "Research", "Agents"],
+        best_for          = ["Reasoning", "Research", "Agents", "Coding", "Math"],
     ),
-    # llama-4-scout — TPM 30 000
     ModelInfo(
-        id                = "meta-llama/llama-4-scout-17b-16e-instruct",
-        label             = "Llama 4 Scout · 17B (preview)",
+        id                = "qwen/qwen3.6-27b",
+        label             = "Qwen3.6 27B",
         context_k         = 128,
         tpm_limit         = 30_000,
-        safe_input_tokens = 16_500,   # 30000 * 0.55
-        best_for          = ["Multimodal", "Long ctx"],
+        safe_input_tokens = 16_500,
+        best_for          = ["Multimodal", "Long ctx", "File/image input"],
     ),
-    # qwen3-32b — TPM 6 000
     ModelInfo(
-        id                = "qwen/qwen3-32b",
-        label             = "Qwen 3 · 32B (reasoning)",
+        id                = "openai/gpt-oss-safeguard-20b",
+        label             = "GPT-OSS Safeguard 20B",
         context_k         = 128,
         tpm_limit         = 6_000,
         safe_input_tokens = 3_300,
-        best_for          = ["Math", "Coding", "Reasoning"],
+        best_for          = ["Content moderation", "Policy classification"],
     ),
 ]
 
